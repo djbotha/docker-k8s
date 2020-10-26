@@ -4,13 +4,19 @@ import { Image } from 'mdx-deck';
 
 function PolymorphFooter() {
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      margin: '2rem'
+    }}>
       <Image src={polymorphLogo}
         style={{
-          width: 300
+          width: 300,
+          height: 70,
+          backgroundSize: 'contain'
         }}
       />
-      asdf
     </div>
   )
 }

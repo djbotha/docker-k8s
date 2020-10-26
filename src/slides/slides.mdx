@@ -1,21 +1,48 @@
+import PolymorphHeader from '../components/PolymorphHeader'
 import PolymorphFooter from '../components/PolymorphFooter'
+import { Image } from 'mdx-deck'
 import { themes  } from 'mdx-deck'
-export const theme = themes.dark
+import dockerLogo from '../img/docker-logo.png'
+import kubernetesLogo from '../img/kubernetes-logo.png'
+export const theme = themes.code
+
+
+<Header>
+  <PolymorphHeader />
+</Header>
 
 <Footer>
   <PolymorphFooter />
 </Footer>
 
-#Hi!
-
-```
-  <MyComponent
-    style={{
-      height: 1234
-    }}
-  />
-```
+<div
+  style={{
+    width: '80%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  }}
+>
+<Image
+  src={dockerLogo}
+  style={{
+    height: 200,
+    backgroundSize: 'contain'
+  }}
+/>
+<span style={{ fontSize: '8rem' }}>+</span>
+<Image
+  src={kubernetesLogo}
+  style={{
+    height: 200,
+    backgroundSize: 'contain',
+  }}
+/>
+</div>
 
 ---
 
-Slide two
+# Containers? Pods?
+
+No, this is not a storage container auction
