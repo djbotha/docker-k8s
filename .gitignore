@@ -151,3 +151,4 @@ backend/.sts4-cache/
 .env
 webui/frontend/.prettierrc
 google-service-account.json
+**/node_modules/*

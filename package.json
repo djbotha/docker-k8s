@@ -1,0 +1,12 @@
+{
+  "name": "docker-k8s",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "mdx-deck start src/slides/slides.mdx -p 3001"
+  },
+  "devDependencies": {
+    "mdx-deck": "^4.1.1"
+  }
+}
