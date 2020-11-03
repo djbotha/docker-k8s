@@ -1,11 +1,10 @@
 import PolymorphHeader from '../components/PolymorphHeader'
 import PolymorphFooter from '../components/PolymorphFooter'
-import { Image } from 'mdx-deck'
-import { themes  } from 'mdx-deck'
+import { Image, themes } from 'mdx-deck'
 import dockerLogo from '../img/docker-logo.png'
 import kubernetesLogo from '../img/kubernetes-logo.png'
-export const theme = themes.code
 
+export const theme = themes.code
 
 <Header>
   <PolymorphHeader />
@@ -41,8 +40,470 @@ export const theme = themes.code
 />
 </div>
 
+<Notes>
+
+- Disclaimer:
+  - This is going to be very high-level talk—just want to give an introduction into these two technologies
+  - I haven't used this stack myself in production
+- Introduction to docker &amp; k8s
+
+</Notes>
+
 ---
 
-# Containers? Pods?
+<Notes>
 
-No, this is not a storage container auction
+- How was hosting done in "the before times"?
+
+- Dedicated servers:
+  - physical machines—hetzner, rsaweb, afrihost, etc
+  - Pricey
+  - Mission to maintain
+  - Cumbersome to set up
+  - All your responsibility
+
+- Virtual Machines
+  - Cheap—multiple VMs run on a single server
+  - The industry standard today
+  - Run by industry leaders like Google/Amazon/Microsoft
+  - Need to allocate resources to each VM running on a server
+  - Wasted resources
+
+- Containers
+  - Don't need to setup multiple different components everytime you want to spin up a new instance
+  - This includes local development—write once, run anywhere
+  - Faster startup (VMs can take minutes to start up, containers take seconds)
+  - Deployments are easier; Kubernetes takes care of it for us. No more tedious release pipelines to bring down the stack, copy files around, bring up the VMs, interrupt up-time, etc.
+  - Resource management is done automagically
+
+- Serverless
+  - Even cheaper than containers—only pay when your code is executing
+  - Better for individual functions that don't need to run the whole time; larger applications still have finer control when using containerization
+  - Functions need to warn up before first run
+
+</Notes>
+
+# Hosting through the ages
+
+<Steps>
+
+- Dedicated Servers
+- Virtual Machines
+- ✨Containers✨
+- Serverless
+
+</Steps>
+
+---
+
+# Images? Containers? Pods? Nodes? Orchestration?
+
+<Image style={{ height: 600, backgroundSize: 'contain'  }} src="https://media1.tenor.com/images/f2bccaa56127353f2d7139c079e75f46/tenor.gif" />
+
+---
+
+<Notes>
+
+- Q: What's the difference between Docker Containers and VMs?
+
+- Docker is a lightweight, portable process that can run on any OS
+
+- As the logo suggests, it's like a cargo ship that carries around all of the components necessary for running your software
+
+- Docker allows us to create an image of our application and all its settings, and spin up the entire stack instantly
+
+- Super fast
+
+</Notes>
+
+# What is Docker?
+
+<Image
+  src={dockerLogo}
+  style={{
+    height: 150,
+    backgroundSize: 'contain',
+    marginTop: '2rem'
+  }}
+/>
+
+---
+
+<Notes>
+
+- We've all been here: build something that only works on your machine
+- Ignoring colleagues' complaints when it doesn't work on their machine
+- By using docker, everyone is effectively running on the same OS
+
+</Notes>
+
+# Why Docker?
+
+<Steps>
+
+- "It worked on my computer, I swear!"
+- Faster onboarding & environment setup
+- Version control is built-in
+- Rollbacks are trivial
+
+</Steps>
+
+---
+
+<Notes>
+
+- Blueprint for building your application
+- Instructioons for new instances to be spun up
+- Usually the commands you would run locally on your machine/VM to install depencies/create executables
+
+</Notes>
+
+# Dockerfiles
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```
+FROM node:alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 4000
+
+CMD ["npx", "ts-node", "src/index.ts"]
+
+```
+
+</div>
+
+---
+
+# Spin up a docker container
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```bash
+# Build our image
+docker build -t djbotha/shopping-list:latest .
+
+# Start a container from our image
+docker run -p 4000:4000 djbotha/shopping-list
+```
+
+</div>
+
+---
+
+<Notes>
+
+- Quickly want to demo this functionality
+
+- Spinning up a new environment takes all of 10 seconds
+- This just lets us run one instance, but what if we wanted to do deploy our app?
+- Docker solves our build step, but not our deployment step
+
+</Notes>
+
+# Demo
+
+---
+
+<Notes>
+
+- Q: Anyone want to guess what container orchestration is?
+- Managing these individual "processes" (containers) are no different to managing multiple VMs/instances of an API
+- If you wanted to ship this as-is, you'll need to:
+  - hook up your own Load Balancers
+  - spin up new instances as required
+  - add your own monitoring
+  - etc
+
+</Notes>
+
+# ✨Container Orchestration✨
+
+<Steps>
+
+- Provisioning & deployment
+- Resource allocation
+- Container availability
+- Auto scaling
+- Load balancing
+- Networking
+- Monitoring container health
+- ...and the list goes on
+
+</Steps>
+
+---
+
+<Notes>
+
+- Q: Who's heard of/used K8s?
+- Q: Anyone want to guess what it does?
+
+</Notes>
+
+<Image
+  src={kubernetesLogo}
+  style={{
+    height: 200,
+    backgroundSize: 'contain',
+  }}
+/>
+
+---
+
+<Notes>
+
+- The official definition: "Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling, and management"
+- K8s allows us to write Yaml config files containing all of the details of our deployment/"how to run the application"
+
+</Notes>
+
+<Image
+  src={kubernetesLogo}
+  style={{
+    height: 200,
+    backgroundSize: 'contain',
+  }}
+/>
+
+_"...is an open-source container-orchestration system for automating computer application deployment, scaling, and management"_
+
+---
+
+# Kubernetes Architecture
+
+<Image
+  style={{
+    height: 500,
+    backgroundSize: 'contain'
+  }}
+  src="https://www.guru99.com/images/1/061419_0430_KubernetesT1.png"
+/>
+
+<span style={{ fontSize: '0.75rem'}}>
+
+_Source: https://www.guru99.com/kubernetes-tutorial.html_
+
+</span>
+
+<Steps>
+
+- One master node, multiple worker nodes
+- YAML Config: instructions for Kubernetes master node
+- Automatic scheduling based on resources
+
+</Steps>
+
+---
+
+# Kubernetes Lingo
+
+<Image
+  style={{
+    height: 400,
+    backgroundSize: 'contain'
+  }}
+  src="https://www.guru99.com/images/1/061419_0430_KubernetesT1.png"
+/>
+<span style={{ fontSize: '0.75rem'}}>
+
+_Source: https://www.guru99.com/kubernetes-tutorial.html_
+
+</span>
+
+<table style={{ width: 900, fontSize: '1.5rem'}}>
+  <tr>
+    <td style={{ paddingRight: '2rem' }}>Node</td>
+    <td>Worker machine</td>
+  </tr>
+  <tr>
+    <td style={{ paddingRight: '2rem' }}>Container</td>
+    <td>Apps that run inside a pod</td>
+  </tr>
+  <tr>
+    <td style={{ paddingRight: '2rem' }}>Pod</td>
+    <td>Collection of containers</td>
+  </tr>
+  <tr>
+    <td style={{ paddingRight: '2rem' }}>Deployment</td>
+    <td>Describes updates of pods</td>
+  </tr>
+  <tr>
+    <td style={{ paddingRight: '2rem' }}>Service</td>
+    <td>Exposes an application as a network service</td>
+  </tr>
+</table>
+
+---
+
+<Notes>
+
+- I'll go through this one quickly to not bore anyone
+- Deployment manifest describes the desired state of our pods:
+  - We want a new deploymment called `shopping-list-deployment`
+  - Call the app `shopping-list`
+  - specify that we want 4 replicas (instances)
+  - each of our pods needs to be built from the `djbotha/shopping-list` docker image
+  - for each of the pods, we want to specify a health endpoint
+  - we want to expose port 4000 to the rest of the network (if we had other services that had to talk to this service, they would connect to this port)
+
+- We can add environment variables here for our containers (e.g. database credentials)
+- These files tend to get pretty big, so they're quite daunting at first
+
+</Notes>
+
+# Deployment Manifest
+
+<div style={{ fontSize: '1rem', overflow: 'auto', maxHeight: 800, padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)" }}>
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-list-deployment
+  labels:
+    app: shopping-list
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: shopping-list
+  template:
+    metadata:
+      labels:
+        app: shopping-list
+    spec:
+      containers:
+      - name: shopping-list
+        image: djbotha/shopping-list:latest
+        livenessProbe:
+          httpGet:
+            path: /.well-known/apollo/server-health
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 3
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4000
+```
+
+</div>
+
+---
+
+<Notes>
+
+- Here's our service manifest:
+  - We want to create a new service called `shopping-list-service`
+  - It will use the `shopping-list` application that we've defined in our `deployment`
+  - `type: LoadBalancer`  exposes this service to the outside world
+  - specify communication ports
+
+</Notes>
+
+# Service Manifest
+
+<div style={{ fontSize: '1rem', overflow: 'auto', maxHeight: 800, padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)" }}>
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-list-service
+spec:
+  selector:
+    app: shopping-list
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+      nodePort: 30000
+```
+
+</div>
+
+---
+
+<Notes>
+
+- With just this one command we can spin up our API
+- This will run through our deployment configuration
+- Pulls the latest docker image
+- Starts N pods with the specified config
+
+</Notes>
+
+# Spin up a cluster
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```bash
+kubectl apply -f deployment.yaml
+```
+
+</div>
+
+---
+
+<Notes>
+
+- This allows us to rebuild & push our docker image, then trigger a new rollout of this image
+
+</Notes>
+
+# Push an update
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```bash
+kubectl rollout restart deployment.apps/shopping-list-deployment
+```
+
+</div>
+
+---
+
+
+# Scale on the fly
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```bash
+kubectl scale --replicas=4 deployment.apps/shopping-list-deployment
+```
+
+</div>
+
+---
+
+<Notes>
+
+- Say we made a mistake when updating our config
+- We can rollback to a previous version
+
+</Notes>
+
+# Rollbacks
+
+
+<div style={{ fontSize: '1rem', padding: '2rem', backgroundColor: "var(--theme-ui-colors-text,#003d48)"}}>
+
+```bash
+kubectl rollout undo deployment.apps/shopping-list-deployment
+```
+
+</div>
+
+
+---
+
+# Demo

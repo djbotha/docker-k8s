@@ -11,7 +11,7 @@ function PolymorphHeader() {
       fontSize: '0.75rem'
     }}>
       <div>
-        Docker / Kubernetes
+        Introduction to Docker &amp; Kubernetes
       </div>
       <div>
         @djbotha
